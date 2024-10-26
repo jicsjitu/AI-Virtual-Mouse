@@ -19,6 +19,7 @@ def load_gesture_controller():
     tf.get_logger().setLevel('ERROR')
     from virtual_mouse import GestureController  # Lazy loading
     gesture_controller = GestureController()
+    print("Gesture controller loaded successfully.")  # Debug print
     return "Initialization complete. Starting tracking..."
 
 # Function to run gesture tracking in a separate thread
@@ -26,11 +27,13 @@ def start_tracking():
     global is_running
     try:
         load_gesture_controller()  # Load the gesture controller
+        print("Starting gesture tracking...")  # Debug print
         gesture_controller.start()  # Begin tracking gestures
         is_running = True
         st.session_state.status_text = "Tracking started!"
     except Exception as e:
         st.session_state.status_text = f"Error initializing virtual mouse: {e}"
+        print(f"Error: {e}")  # Debug print
 
 # Streamlit GUI setup
 st.title("AI Virtual Mouse")
@@ -47,6 +50,7 @@ st.write(st.session_state.status_text)
 if st.button("Track Mouse"):
     if not is_running:
         st.session_state.status_text = "Initializing... Please wait."
+        print("Track Mouse button clicked.")  # Debug print
         status_thread = threading.Thread(target=start_tracking)
         status_thread.start()  # Start tracking in a separate thread
     else:
